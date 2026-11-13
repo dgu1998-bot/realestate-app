@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>홍길동부동산 · 경산 아파트 브리핑</title>
+<link rel="stylesheet" href="./style.css">
+<style>
+.file-launch{display:none}
+.file-preview .file-launch{display:block;max-width:660px;margin:8vh auto;padding:24px}
+.file-preview body>:not(.file-launch){display:none}
+</style>
+<script>
+if (location.protocol === 'file:') {
+  document.documentElement.classList.add('file-preview');
+} else {
+  import('./app.js');
+}
+</script>
+</head>
+<body>
+<section class="file-launch panel">
+<h1>경산 아파트 브리핑 실행</h1>
+<p>프로젝트 폴더의 <strong>대시보드 실행.cmd</strong>를 더블클릭하면 서버가 시작되고 브라우저가 열립니다.</p>
+<p>터미널에서 <code>npm start</code>로 실행했다면 <a class="textButton" href="http://127.0.0.1:3000/">대시보드 열기 ↗</a>를 누르세요.</p>
+</section>
+<header class="top"><div class="bar"><a class="brand" href="#"><span class="logo" aria-hidden="true"><svg viewBox="0 0 48 48" fill="none"><path d="M6 35 18 22l6 6 9-10 9 17H6Z" fill="#d7f0cd"/><path d="M16 32V16l8-7 8 7v16M24 18v4m0 4v4" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span>홍길동부동산<small>경산시 아파트 전문</small></span></a><nav><a href="#market">실거래 현황</a><a href="#recommend">추천매물</a><a href="#location">입지 분석</a></nav><div class="contact">Tel. 000-XXXX-XXXX <button id="settings" type="button" class="icon" aria-label="API 설정" title="API 설정">⚙</button></div></div></header>
+<main>
+<section class="intro"><div><p class="eyebrow"><span></span> 경상북도 경산시</p><h1>경산 아파트 브리핑</h1><p>단지별 실거래와 주변 생활환경을 한눈에 살펴보세요.</p></div><span id="modeLabel" class="pill">데이터 확인 중</span></section>
+<form id="filters" class="panel filters">
+<label>지역<select id="district"></select></label>
+<fieldset><legend>조회 단위</legend><div id="period" class="seg"><button type="button" data-period="weekly">주간</button><button type="button" data-period="monthly">월간</button><button type="button" data-period="custom">직접 지정</button></div></fieldset>
+<label>시작일<input type="date" id="start" required></label>
+<label>종료일<input type="date" id="end" required></label>
+<button class="primary" type="submit">조회</button>
+</form>
+<p id="notice" class="notice" role="status"></p>
+<section class="metrics" aria-label="시장 지표">
+<article class="panel metric"><div><span class="symbol">↗</span> 선택 기간 거래</div><strong id="count">—</strong><small id="countNote">계약일 기준</small></article>
+<article class="panel metric"><div><span class="symbol">₩</span> <span id="medianTitle">매매 중위가</span></div><strong id="median">—</strong><small id="medianNote">선택 지역 · 거래 유형 기준</small></article>
+<article class="panel metric"><div><span class="symbol">▤</span> 거래 단지</div><strong id="complexes">—</strong><small>조회 기간에 신고된 단지</small></article>
+<article class="panel metric"><div><span class="symbol">⌁</span> 경산시 아파트 매매가격지수</div><strong id="indexValue">—</strong><small id="indexNote">한국부동산원 · 월간</small></article>
+</section>
+<section id="market" class="section">
+<div class="sectionHead"><div><p class="eyebrow">실거래 현황</p><h2>아파트 거래 Top 10</h2><p id="marketSubtitle">계약일 기준 신고 건수 순</p></div><div id="kinds" class="seg" aria-label="거래 유형"><button data-kind="매매">매매</button><button data-kind="전세">전세</button><button data-kind="월세">월세</button></div></div>
+<div class="marketGrid">
+<article class="panel ranking"><div class="panelHead"><h3>단지 순위</h3><span id="rankCount" class="muted"></span></div><div id="ranking"></div><button id="expandRank" class="textButton" type="button" hidden></button></article>
+<article class="panel mapPanel"><div class="panelHead"><div><h3 id="mapTitle">단지 위치</h3><p id="mapAddress" class="muted"></p></div><a id="mapLink" class="textButton" target="_blank" rel="noopener" hidden>지도 검색 ↗</a></div><div id="map" class="map"></div><div id="recent" class="recent"></div></article>
+</div>
+</section>
+<section id="location" class="section"><div class="sectionHead"><div><p class="eyebrow">생활환경</p><h2>단지 입지 분석</h2><p id="locationSubtitle">단지를 선택하면 주변 정보를 표시합니다.</p></div></div><div id="locationGrid" class="locationGrid"></div></section>
+<section class="section"><div class="sectionHead"><div><p class="eyebrow">시장 지표</p><h2>거래량 흐름</h2><p id="chartNote">선택 지역 · 계약일 기준</p></div></div><div id="chart" class="panel chart"></div></section>
+<section id="recommend" class="section"><div class="sectionHead"><div><p class="eyebrow">중개사 추천</p><h2>추천매물</h2><p>샘플 4건과 이 브라우저에서 추가한 매물을 볼 수 있습니다.</p></div><button id="addListing" type="button" class="primary">＋ 매물 추가</button></div><div id="listings" class="listingGrid"></div></section>
+</main>
+<footer><div><strong>홍길동부동산</strong><span>Tel. 000-XXXX-XXXX</span></div><div class="sources"><a href="https://rt.molit.go.kr/" target="_blank" rel="noopener">국토교통부 실거래가</a><a href="https://www.reb.or.kr/r-one/" target="_blank" rel="noopener">한국부동산원 R-ONE</a><a href="https://stat.molit.go.kr/" target="_blank" rel="noopener">국토교통 통계누리 · 미분양</a><a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a></div></footer>
+<dialog id="settingsDialog"><form id="apiForm"><header><h2>공공데이터 연결</h2><button type="button" class="icon close" aria-label="닫기">×</button></header><p>키는 로컬 서버 메모리에 보관됩니다. 서버를 재시작해도 연결을 유지하려면 로컬 환경변수를 설정하세요.</p><label>공공데이터포털 API 키<input name="molit" type="password" autocomplete="off" placeholder="키 입력"></label><label>한국부동산원 API 키<input name="reb" type="password" autocomplete="off" placeholder="키 입력"></label><p id="apiStatus" role="status"></p><button type="submit" class="primary">연결 저장</button></form></dialog>
+<dialog id="listingDialog"><form id="listingForm"><header><h2>추천매물 추가</h2><button type="button" class="icon close" aria-label="닫기">×</button></header><label>아파트명<input name="name" maxlength="70" required></label><label>법정동 또는 읍·면·리<input name="dong" maxlength="35" required placeholder="예: 중산동, 하양읍 서사리"></label><label>지번<input name="jibun" maxlength="30" placeholder="예: 655"></label><div class="formRow"><label>거래 유형<select name="kind"><option>매매</option><option>전세</option><option>월세</option></select></label><label>전용면적 (㎡)<input name="area" type="number" min="1" step=".01" required></label></div><label>매매가 또는 보증금 (만원)<input name="amount" type="number" min="0" required></label><label id="rentField" hidden>월세 (만원)<input name="monthly" type="number" min="1"></label><label>매물 소개<input name="note" maxlength="100" placeholder="예: 남향, 입주일 협의"></label><button type="submit" class="primary">매물 저장</button></form></dialog>
+</body>
+</html>
+
