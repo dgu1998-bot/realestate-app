@@ -3,18 +3,18 @@ const staticHosting = location.hostname.endsWith('.github.io');
 const kinds = ['매매','전세','월세'];
 const districts = '하양읍 진량읍 압량읍 와촌면 자인면 용성면 남산면 남천면 삼북동 삼남동 서상동 신교동 상방동 백천동 옥곡동 옥산동 사정동 정평동 중산동 중방동 계양동 사동 평산동 점촌동 여천동 유곡동 신천동 갑제동 조영동 대동 임당동 대평동 대정동 소룡동 내동 남방동 내리동'.split(' ');
 const sampleListings = [
-  {name:'펜타힐즈더샵2차',dong:'중산동',jibun:'655',area:84.98,kind:'매매',amount:48500,note:'중산동 아파트 상담 예시'},
-  {name:'중산자이1단지',dong:'중산동',area:84.95,kind:'전세',amount:34000,note:'전용 84㎡ 전세 상담 예시'},
-  {name:'경산아이파크',dong:'압량읍 신대리',area:84.96,kind:'매매',amount:39000,note:'압량읍 신축 단지 상담 예시'},
-  {name:'팰리스부영2단지',dong:'사동',area:84.9,kind:'월세',amount:3000,monthly:75,note:'사동 월세 상담 예시'},
+  {name:'펜타힐즈더샵2차',dong:'중산동',jibun:'655',lat:35.8352,lon:128.7206,area:84.98,kind:'매매',amount:48500,note:'중산동 아파트 상담 예시'},
+  {name:'중산자이1단지',dong:'중산동',lat:35.8363,lon:128.7178,area:84.95,kind:'전세',amount:34000,note:'전용 84㎡ 전세 상담 예시'},
+  {name:'경산아이파크',dong:'압량읍 신대리',lat:35.8427,lon:128.7548,area:84.96,kind:'매매',amount:39000,note:'압량읍 신축 단지 상담 예시'},
+  {name:'팰리스부영2단지',dong:'사동',jibun:'297',lat:35.8108,lon:128.7687,area:84.9,kind:'월세',amount:3000,monthly:75,note:'사동 월세 상담 예시'},
 ].map((v,i)=>({...v,id:'sample-'+i,sample:true}));
 const sampleComplexes = [...sampleListings,
-  {name:'중방스타힐스',dong:'중방동',area:84.8,amount:37500},
-  {name:'펜타힐즈푸르지오2차',dong:'중산동',area:84.95,amount:48000},
-  {name:'경산하양금호어울림',dong:'하양읍 서사리',area:74.8,amount:28500},
-  {name:'정평역하늘채리버파크',dong:'정평동',area:84.9,amount:45500},
-  {name:'옥곡동부영우리마을',dong:'옥곡동',area:59.8,amount:20500},
-  {name:'경산서희스타힐스',dong:'중방동',area:84.9,amount:36500},
+  {name:'중방스타힐스',dong:'중방동',lat:35.8232,lon:128.7353,area:84.8,amount:37500},
+  {name:'펜타힐즈푸르지오2차',dong:'중산동',lat:35.8332,lon:128.7212,area:84.95,amount:48000},
+  {name:'경산하양금호어울림',dong:'하양읍 서사리',lat:35.9146,lon:128.8162,area:74.8,amount:28500},
+  {name:'정평역하늘채리버파크',dong:'정평동',lat:35.8341,lon:128.7281,area:84.9,amount:45500},
+  {name:'옥곡동부영우리마을',dong:'옥곡동',lat:35.8148,lon:128.7237,area:59.8,amount:20500},
+  {name:'경산서희스타힐스',dong:'중방동',lat:35.8245,lon:128.7371,area:84.9,amount:36500},
 ];
 const topics = [
   {title:'교통',icon:'↔',detail:'반경 2.8 km · 철도역과 버스 정류장', searches:['KTX역','도시철도역','버스정류장']},
@@ -230,8 +230,10 @@ async function choose(apt, jump=false) {
   if (!fixture && canQuery) api('recent',{...args,kind,end}).then(({rows})=>{
     if (token===$state.detail) renderRecent(rows,kind);
   }).catch(e=>{if (token===$state.detail && !apt.rows?.length) renderRecent([],kind,e.message);});
-  let point;
-  try { ({point}=await api('location',args)); } catch { point=null; }
+  let point=Number.isFinite(apt.lat)&&Number.isFinite(apt.lon)?{lat:apt.lat,lon:apt.lon}:null;
+  if (!point) {
+    try { ({point}=await api('location',args)); } catch { point=null; }
+  }
   if (token!==$state.detail) return;
   if (!point) {
     $('mapAddress').textContent+=' · 주소 검색 위치';
